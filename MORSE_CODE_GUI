@@ -1,0 +1,100 @@
+from tkinter import *
+import RPi.GPIO as GPIO
+from gpiozero import LED
+from time import sleep
+
+GPIO.setmode(GPIO.BCM)
+led = LED(15)
+
+window = Tk()
+window.title("5.3D")
+
+MORSE_CODE_DICT = {
+    'A':'.-',
+    'B':'-...',
+    'C':'-.-.',
+    'D':'-..',
+    'E':'.',
+    'F':'..-.',
+    'G':'--.',
+    'H':'....',
+    'I':'..',
+    'J':'.---',
+    'K':'-.-',
+    'L':'.-..',
+    'M':'--',
+    'N':'-.',
+    'O':'---',
+    'P':'.--.',
+    'Q':'--.-',
+    'R':'.-.',
+    'S':'...',
+    'T':'-',
+    'U':'..-',
+    'V':'...-',
+    'W':'.--',
+    'X':'-..-',
+    'Y':'-.--',
+    'Z':'--..',
+    '1':'.----',
+    '2':'..---',
+    '3':'...--',
+    '4':'....-',
+    '5':'.....',
+    '6':'-....',
+    '7':'--...',
+    '8':'---..',
+    '9':'----.',
+    '0':'-----',
+}
+
+text1 = Entry()
+
+def ledBlink(name):
+    led.off()
+    i = 0
+    while len(name) > i:
+        if name[i] == '.':
+            led.on()
+            sleep(0.5)
+            led.off()
+           
+        elif name[i] == '-':
+            led.on()
+            sleep(1.5)
+            led.off()
+           
+        elif name[i] == ' ':
+            led.off()
+            sleep(3)
+        sleep(0.25)
+        i += 1
+
+def builder():
+    print(text1.get())
+    name = (text1.get()).upper()
+    arr = list(name)
+    MyWord = ''
+    for letter in arr:
+        if letter != ' ':
+            MyWord += MORSE_CODE_DICT[letter] + ' '
+        else:
+            MyWord += ' '
+    print(MyWord)
+    ledBlink(MyWord)
+    
+def close():
+    window.destroy()
+
+window.geometry("300x175")
+
+label1 = Label(text="Enter Your Name to Blink:")
+label1.pack(pady=10)
+
+text1.pack(pady=10)
+
+submit = Button(text="SUBMIT" ,command=builder) 
+submit.pack(pady=3)
+exit = Button(text="EXIT", command = close)
+exit.pack()
+window.mainloop()
